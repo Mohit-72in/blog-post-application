@@ -1,0 +1,60 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* Global Custom Styles to match reference screenshot */
+body {
+  background-color: #ffffff;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom dark navbar styling */
+.bg-dark-custom {
+  background-color: #212529 !important;
+}
+
+/* Sidebar styling matching screenshot */
+.sidebar-container {
+  width: 200px;
+  min-height: calc(100vh - 56px);
+  background-color: #212529;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  padding: 1.25rem 1rem;
+  color: #ffffff;
+}
+
+.sidebar-nav-link {
+  color: #d0d2d6;
+  text-decoration: none;
+  padding: 0.6rem 1.2rem;
+  display: block;
+  font-size: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 0.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar-nav-link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-nav-link.active {
+  color: #ffffff;
+  background-color: #0d6efd; /* Blue pill active background */
+  font-weight: 500;
+}
+
+/* Main Content Area */
+.main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #ffffff;
+}

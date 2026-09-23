@@ -1,0 +1,39 @@
+.post-card {
+  max-width: 650px;
+  background-color: #ffffff;
+  border-color: #dee2e6 !important;
+}
+
+.delete-btn {
+  position: absolute;
+  top: -12px;
+  right: 24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.delete-btn:hover {
+  background-color: #bb2d3b;
+  transform: scale(1.08);
+}
+
+.alert-success-custom {
+  background-color: #d1e7dd;
+  border: 1px solid #badbcc;
+  color: #0f5132;
+}
+
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}

@@ -1,0 +1,104 @@
+<div class="post-form-container border rounded-3 p-4 bg-white shadow-sm" style="max-width: 700px;">
+  <h2 class="h4 mb-4 fw-bold text-dark">{{ isEditMode ? 'Edit Post' : 'Create New Post' }}</h2>
+
+  <!-- Error Alert -->
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+    <i class="bi bi-exclamation-circle-fill me-2"></i> {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+  </div>
+
+  <form #postForm="ngForm" (ngSubmit)="onSubmit(postForm)" novalidate>
+    <!-- Author field / indicator -->
+    <div class="mb-3" *ngIf="!isEditMode">
+      <label for="author" class="form-label fw-medium">Author Username</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light text-muted"><i class="bi bi-person-fill me-1"></i> &#64;</span>
+        <input
+          type="text"
+          id="author"
+          name="author"
+          class="form-control"
+          [(ngModel)]="author"
+          placeholder="e.g. john_doe (or leave blank for anonymous)">
+      </div>
+      <div class="form-text small" *ngIf="authService.currentUser() as u">
+        Posting as <strong>{{ u.name }}</strong> (&#64;{{ u.username }}).
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="mb-3">
+      <label for="title" class="form-label fw-medium">Title <span class="text-danger">*</span></label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        class="form-control"
+        [(ngModel)]="title"
+        #titleCtrl="ngModel"
+        required
+        maxlength="150"
+        [ngClass]="{ 'is-invalid': postForm.submitted && titleCtrl.invalid }"
+        placeholder="Enter post title (max 150 characters)">
+      <div *ngIf="postForm.submitted && titleCtrl.invalid" class="invalid-feedback">
+        <span *ngIf="titleCtrl.errors?.['required']">Title is required.</span>
+        <span *ngIf="titleCtrl.errors?.['maxlength']">Title cannot exceed 150 characters.</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="mb-3">
+      <label for="body" class="form-label fw-medium">Body Text <span class="text-danger">*</span></label>
+      <textarea
+        id="body"
+        name="body"
+        rows="6"
+        class="form-control"
+        [(ngModel)]="body"
+        #bodyCtrl="ngModel"
+        required
+        maxlength="2000"
+        [ngClass]="{ 'is-invalid': postForm.submitted && bodyCtrl.invalid }"
+        placeholder="Write post content here... (max 2000 characters)"></textarea>
+      <div *ngIf="postForm.submitted && bodyCtrl.invalid" class="invalid-feedback">
+        <span *ngIf="bodyCtrl.errors?.['required']">Body text is required.</span>
+        <span *ngIf="bodyCtrl.errors?.['maxlength']">Body text cannot exceed 2000 characters.</span>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="mb-3">
+      <label for="tags" class="form-label fw-medium">Tags (comma-separated)</label>
+      <input
+        type="text"
+        id="tags"
+        name="tags"
+        class="form-control"
+        [(ngModel)]="tagsInput"
+        placeholder="e.g. history, american, crime">
+      <div class="form-text">Separate tags with commas.</div>
+    </div>
+
+    <!-- First Comment (only on Create) -->
+    <div class="mb-4" *ngIf="!isEditMode">
+      <label for="firstComment" class="form-label fw-medium">First Comment (Optional)</label>
+      <textarea
+        id="firstComment"
+        name="firstComment"
+        rows="2"
+        class="form-control"
+        [(ngModel)]="firstComment"
+        maxlength="500"
+        placeholder="Add an optional initial comment for this post"></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="d-flex gap-2 justify-content-end">
+      <a routerLink="/" class="btn btn-outline-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary px-4" [disabled]="submitting">
+        <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1" role="status"></span>
+        {{ isEditMode ? 'Save Changes' : 'Publish Post' }}
+      </button>
+    </div>
+  </form>
+</div>

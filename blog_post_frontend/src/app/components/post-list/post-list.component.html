@@ -1,0 +1,42 @@
+<div class="post-list-container">
+  <!-- Author Filter Banner -->
+  <div *ngIf="filterAuthor" class="alert alert-info d-flex align-items-center justify-content-between mb-4 border-0 shadow-sm bg-primary bg-opacity-10 text-primary-emphasis rounded-3 px-3 py-2">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-funnel-fill fs-5"></i>
+      <span>Showing posts authored by <strong>&#64;{{ filterAuthor }}</strong></span>
+    </div>
+    <a routerLink="/" class="btn btn-outline-primary btn-sm px-3 rounded-pill fw-medium">
+      <i class="bi bi-x-circle me-1"></i>Show All Posts
+    </a>
+  </div>
+
+  <!-- Error Alert -->
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading posts...</span>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && posts.length === 0 && !errorMessage" class="text-center py-5 text-secondary">
+    <i class="bi bi-journal-x fs-1 text-muted"></i>
+    <p class="mt-2" *ngIf="filterAuthor">No posts found for user <strong>&#64;{{ filterAuthor }}</strong>.</p>
+    <p class="mt-2" *ngIf="!filterAuthor">No posts available. Click "Create Post" in the sidebar to add one!</p>
+  </div>
+
+  <!-- Posts List -->
+  <div *ngIf="!loading && posts.length > 0">
+    <app-post-card
+      *ngFor="let post of posts"
+      [post]="post"
+      (delete)="onDeletePost($event)"
+      (react)="onReactPost($event)">
+    </app-post-card>
+  </div>
+</div>
