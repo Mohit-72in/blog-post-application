@@ -1,1 +1,15 @@
+# Project-wide ignores
 PROJECT.md
+.vscode/
+.idea/
+*.log
+.DS_Store
+Thumbs.db
+
+# Build outputs
+**/target/
+**/dist/
+**/node_modules/
+**/.angular/cache/
+blog_post_backend/data/
+blog_post_backend/target_test-classes/

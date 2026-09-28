@@ -1,6 +1,9 @@
 .sidebar-container {
   width: 200px;
-  min-height: calc(100vh - 56px);
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
   background-color: #212529 !important;
 }
 

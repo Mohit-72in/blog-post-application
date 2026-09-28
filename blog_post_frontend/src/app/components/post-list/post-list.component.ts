@@ -26,7 +26,7 @@ export class PostListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe((params: any) => {
       this.filterAuthor = params['author'] || null;
       this.fetchPosts();
     });
@@ -36,11 +36,11 @@ export class PostListComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
     this.postService.getPosts(this.filterAuthor || undefined).subscribe({
-      next: (data) => {
+      next: (data: Post[]) => {
         this.posts = data;
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.errorMessage = err?.error?.message || 'Failed to load posts from server.';
         this.loading = false;
       }
@@ -50,9 +50,9 @@ export class PostListComponent implements OnInit {
   onDeletePost(id: number): void {
     this.postService.deletePost(id).subscribe({
       next: () => {
-        this.posts = this.posts.filter((p) => p.id !== id);
+        this.posts = this.posts.filter((p: Post) => p.id !== id);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.errorMessage = err?.error?.message || 'Failed to delete post.';
       }
     });
@@ -60,13 +60,13 @@ export class PostListComponent implements OnInit {
 
   onReactPost(id: number): void {
     this.postService.reactToPost(id).subscribe({
-      next: (updatedPost) => {
-        const post = this.posts.find((p) => p.id === id);
+      next: (updatedPost: Post) => {
+        const post = this.posts.find((p: Post) => p.id === id);
         if (post) {
           post.reactions = updatedPost.reactions;
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.errorMessage = err?.error?.message || 'Failed to update reaction.';
       }
     });

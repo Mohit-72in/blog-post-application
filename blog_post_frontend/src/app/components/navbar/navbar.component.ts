@@ -55,12 +55,12 @@ export class NavbarComponent {
     this.errorMessage = '';
     this.submitting = true;
     this.authService.login({ username: this.loginUsername.trim() }).subscribe({
-      next: (user) => {
+      next: (user: any) => {
         this.submitting = false;
         this.successMessage = `Welcome back, ${user.name}!`;
         setTimeout(() => this.closeModal(), 600);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.submitting = false;
         this.errorMessage = err.error?.message || err.message || 'Login failed. Make sure the username exists or sign up.';
       }
@@ -78,12 +78,12 @@ export class NavbarComponent {
       username: this.signupUsername.trim(),
       name: this.signupName.trim()
     }).subscribe({
-      next: (user) => {
+      next: (user: any) => {
         this.submitting = false;
         this.successMessage = `Account created successfully! Welcome, ${user.name}.`;
         setTimeout(() => this.closeModal(), 600);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.submitting = false;
         this.errorMessage = err.error?.message || err.message || 'Signup failed. Username may already be taken.';
       }

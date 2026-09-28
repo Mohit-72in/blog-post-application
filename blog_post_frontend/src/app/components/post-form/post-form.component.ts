@@ -49,7 +49,7 @@ export class PostFormComponent implements OnInit {
 
   loadPost(id: number): void {
     this.postService.getPostById(id).subscribe({
-      next: (post) => {
+      next: (post: any) => {
         this.title = post.title;
         this.body = post.body;
         this.tagsInput = post.tags ? post.tags.join(', ') : '';
@@ -57,7 +57,7 @@ export class PostFormComponent implements OnInit {
           this.author = post.author;
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.errorMessage = err?.error?.message || 'Failed to load post for editing.';
       }
     });
@@ -73,8 +73,8 @@ export class PostFormComponent implements OnInit {
 
     const tagsArray = this.tagsInput
       .split(',')
-      .map((t) => t.trim())
-      .filter((t) => t.length > 0);
+      .map((t: string) => t.trim())
+      .filter((t: string) => t.length > 0);
 
     if (this.isEditMode && this.postId) {
       const payload: UpdatePostPayload = {
@@ -88,7 +88,7 @@ export class PostFormComponent implements OnInit {
           this.submitting = false;
           this.router.navigate(['/']);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.submitting = false;
           this.errorMessage = err?.error?.message || 'Failed to update post.';
         }
@@ -108,7 +108,7 @@ export class PostFormComponent implements OnInit {
           this.submitting = false;
           this.router.navigate(['/']);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.submitting = false;
           this.errorMessage = err?.error?.message || 'Failed to create post.';
         }

@@ -29,13 +29,13 @@ export class AuthService {
 
   login(payload: LoginPayload): Observable<User> {
     return this.http.post<User>(`${this.baseUrl}/login`, payload).pipe(
-      tap((user) => this.setUser(user))
+      tap((user: User) => this.setUser(user))
     );
   }
 
   signup(payload: SignupPayload): Observable<User> {
     return this.http.post<User>(`${this.baseUrl}/signup`, payload).pipe(
-      tap((user) => this.setUser(user))
+      tap((user: User) => this.setUser(user))
     );
   }
 
