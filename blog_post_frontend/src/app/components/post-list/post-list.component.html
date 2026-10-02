@@ -1,17 +1,32 @@
 <div class="post-list-container">
-  <!-- Author Filter Banner -->
-  <div *ngIf="filterAuthor" class="alert alert-info d-flex align-items-center justify-content-between mb-4 border-0 shadow-sm bg-primary bg-opacity-10 text-primary-emphasis rounded-3 px-3 py-2">
-    <div class="d-flex align-items-center gap-2">
-      <i class="bi bi-funnel-fill fs-5"></i>
-      <span>Showing posts authored by <strong>&#64;{{ filterAuthor }}</strong></span>
+  <!-- Active Filter Badges & Context Bar -->
+  <div *ngIf="filterAuthor || searchQuery" class="active-filters-bar p-3 mb-4 rounded-3 border bg-white shadow-sm d-flex flex-wrap align-items-center justify-content-between gap-2">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+      <span class="text-secondary small fw-bold text-uppercase me-1"><i class="bi bi-funnel me-1"></i>Filters:</span>
+
+      <!-- Author Filter Badge -->
+      <span *ngIf="filterAuthor" class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill d-inline-flex align-items-center gap-2 fs-6">
+        <i class="bi bi-person-fill"></i>
+        <span>Author: <strong>&#64;{{ filterAuthor }}</strong></span>
+        <button type="button" class="btn-close btn-close-sm ms-1" style="font-size: 0.65rem;" (click)="clearAuthorFilter()" aria-label="Remove author filter"></button>
+      </span>
+
+      <!-- Search Filter Badge -->
+      <span *ngIf="searchQuery" class="badge bg-warning bg-opacity-15 text-dark border border-warning border-opacity-50 px-3 py-2 rounded-pill d-inline-flex align-items-center gap-2 fs-6">
+        <i class="bi bi-search text-warning-emphasis"></i>
+        <span>Search: <strong>"{{ searchQuery }}"</strong></span>
+        <button type="button" class="btn-close btn-close-sm ms-1" style="font-size: 0.65rem;" (click)="clearSearch()" aria-label="Remove search filter"></button>
+      </span>
     </div>
-    <a routerLink="/" class="btn btn-outline-primary btn-sm px-3 rounded-pill fw-medium">
-      <i class="bi bi-x-circle me-1"></i>Show All Posts
-    </a>
+
+    <!-- Reset All Filters -->
+    <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill fw-medium" (click)="clearAllFilters()">
+      <i class="bi bi-arrow-counterclockwise me-1"></i>Reset Filters
+    </button>
   </div>
 
   <!-- Error Alert -->
-  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
     <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
     <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
   </div>
@@ -21,13 +36,54 @@
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading posts...</span>
     </div>
+    <p class="text-muted mt-2 small">Fetching posts...</p>
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="!loading && posts.length === 0 && !errorMessage" class="text-center py-5 text-secondary">
-    <i class="bi bi-journal-x fs-1 text-muted"></i>
-    <p class="mt-2" *ngIf="filterAuthor">No posts found for user <strong>&#64;{{ filterAuthor }}</strong>.</p>
-    <p class="mt-2" *ngIf="!filterAuthor">No posts available. Click "Create Post" in the sidebar to add one!</p>
+  <div *ngIf="!loading && posts.length === 0 && !errorMessage" class="empty-state-card text-center py-5 px-4 bg-white border rounded-3 shadow-sm mb-4">
+    <div class="empty-icon-circle mb-3 mx-auto">
+      <i class="bi bi-journal-x fs-1 text-secondary"></i>
+    </div>
+    <h4 class="fw-bold text-dark mb-2">No Posts Found</h4>
+
+    <p class="text-muted mb-4" *ngIf="searchQuery && filterAuthor">
+      No posts matching "<strong>{{ searchQuery }}</strong>" authored by <strong>&#64;{{ filterAuthor }}</strong>.
+    </p>
+    <p class="text-muted mb-4" *ngIf="searchQuery && !filterAuthor">
+      No posts match your search query "<strong>{{ searchQuery }}</strong>". Try different keywords or clear your search.
+    </p>
+    <p class="text-muted mb-4" *ngIf="!searchQuery && filterAuthor">
+      No posts published yet by user <strong>&#64;{{ filterAuthor }}</strong>.
+    </p>
+    <p class="text-muted mb-4" *ngIf="!searchQuery && !filterAuthor">
+      There are currently no blog posts published. Be the first to share your thoughts!
+    </p>
+
+    <div class="d-flex justify-content-center gap-2">
+      <button *ngIf="searchQuery || filterAuthor" class="btn btn-outline-primary px-4 rounded-pill fw-semibold" (click)="clearAllFilters()">
+        <i class="bi bi-grid-fill me-1"></i>View All Posts
+      </button>
+      <a routerLink="/create" class="btn btn-primary px-4 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-plus-circle-fill me-1"></i>Create New Post
+      </a>
+    </div>
+  </div>
+
+  <!-- Header Info Bar (Post count & Page Size Selector) -->
+  <div *ngIf="!loading && posts.length > 0" class="d-flex flex-wrap align-items-center justify-content-between mb-3 text-secondary small">
+    <div>
+      <span>Showing <strong>{{ (currentPage * pageSize) + 1 }}</strong> - <strong>{{ ((currentPage * pageSize) + posts.length) }}</strong> of <strong>{{ totalElements }}</strong> posts</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <label for="pageSizeSelect" class="text-muted mb-0">Posts per page:</label>
+      <select
+        id="pageSizeSelect"
+        class="form-select form-select-sm w-auto border-secondary-subtle"
+        [ngModel]="pageSize"
+        (ngModelChange)="onPageSizeChange($event)">
+        <option *ngFor="let opt of pageSizeOptions" [value]="opt">{{ opt }}</option>
+      </select>
+    </div>
   </div>
 
   <!-- Posts List -->
@@ -39,4 +95,49 @@
       (react)="onReactPost($event)">
     </app-post-card>
   </div>
+
+  <!-- Pagination Bar -->
+  <nav *ngIf="!loading && totalPages > 1" aria-label="Post pagination" class="mt-4 mb-5">
+    <ul class="pagination pagination-custom justify-content-center gap-1">
+      <!-- First Page Button -->
+      <li class="page-item" [class.disabled]="isFirst">
+        <button class="page-link rounded-2 shadow-sm" (click)="goToPage(0)" [disabled]="isFirst" title="First Page" aria-label="First">
+          <i class="bi bi-chevron-double-left"></i>
+        </button>
+      </li>
+
+      <!-- Previous Page Button -->
+      <li class="page-item" [class.disabled]="!hasPrevious">
+        <button class="page-link rounded-2 shadow-sm" (click)="goToPage(currentPage - 1)" [disabled]="!hasPrevious" aria-label="Previous">
+          <i class="bi bi-chevron-left me-1"></i>Prev
+        </button>
+      </li>
+
+      <!-- Numbered Pages -->
+      <li *ngFor="let page of getPages()" class="page-item" [class.active]="page === currentPage">
+        <button class="page-link rounded-2 shadow-sm fw-semibold" (click)="goToPage(page)">
+          {{ page + 1 }}
+        </button>
+      </li>
+
+      <!-- Next Page Button -->
+      <li class="page-item" [class.disabled]="!hasNext">
+        <button class="page-link rounded-2 shadow-sm" (click)="goToPage(currentPage + 1)" [disabled]="!hasNext" aria-label="Next">
+          Next<i class="bi bi-chevron-right ms-1"></i>
+        </button>
+      </li>
+
+      <!-- Last Page Button -->
+      <li class="page-item" [class.disabled]="isLast">
+        <button class="page-link rounded-2 shadow-sm" (click)="goToPage(totalPages - 1)" [disabled]="isLast" title="Last Page" aria-label="Last">
+          <i class="bi bi-chevron-double-right"></i>
+        </button>
+      </li>
+    </ul>
+
+    <div class="text-center text-muted small mt-2">
+      Page {{ currentPage + 1 }} of {{ totalPages }}
+    </div>
+  </nav>
 </div>
+

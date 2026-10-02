@@ -90,7 +90,11 @@ export class PostFormComponent implements OnInit {
         },
         error: (err: any) => {
           this.submitting = false;
-          this.errorMessage = err?.error?.message || 'Failed to update post.';
+          if (err?.error?.fields) {
+            this.errorMessage = Object.values(err.error.fields).join(' ');
+          } else {
+            this.errorMessage = err?.error?.message || err?.message || 'Failed to update post.';
+          }
         }
       });
     } else {
@@ -110,7 +114,11 @@ export class PostFormComponent implements OnInit {
         },
         error: (err: any) => {
           this.submitting = false;
-          this.errorMessage = err?.error?.message || 'Failed to create post.';
+          if (err?.error?.fields) {
+            this.errorMessage = Object.values(err.error.fields).join(' ');
+          } else {
+            this.errorMessage = err?.error?.message || err?.message || 'Failed to create post.';
+          }
         }
       });
     }

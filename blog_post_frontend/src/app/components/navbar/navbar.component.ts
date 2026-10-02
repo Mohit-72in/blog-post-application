@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 
@@ -11,9 +11,11 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   showModal = false;
   isSignupMode = false;
+
+  searchQuery = '';
 
   loginUsername = '';
   signupUsername = '';
@@ -23,7 +25,33 @@ export class NavbarComponent {
   errorMessage = '';
   successMessage = '';
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params: any) => {
+      this.searchQuery = params['search'] || '';
+    });
+  }
+
+  onSearch(): void {
+    const trimmed = this.searchQuery.trim();
+    this.router.navigate(['/'], {
+      queryParams: { search: trimmed || null, page: 0 },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  onClearSearch(): void {
+    this.searchQuery = '';
+    this.router.navigate(['/'], {
+      queryParams: { search: null, page: 0 },
+      queryParamsHandling: 'merge'
+    });
+  }
 
   openModal(mode: 'login' | 'signup'): void {
     this.isSignupMode = mode === 'signup';

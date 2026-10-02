@@ -1,3 +1,53 @@
 .post-list-container {
-  max-width: 800px;
+  max-width: 860px;
 }
+
+.active-filters-bar {
+  border-color: #e2e8f0;
+  background: #ffffff;
+}
+
+.empty-state-card {
+  border-color: #e2e8f0;
+}
+
+.empty-icon-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-custom .page-link {
+  color: #1e293b;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination-custom .page-link:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+.pagination-custom .page-item.active .page-link {
+  background-color: #ffc107;
+  border-color: #e0a800;
+  color: #000000;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-custom .page-item.disabled .page-link {
+  color: #94a3b8;
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+}
+

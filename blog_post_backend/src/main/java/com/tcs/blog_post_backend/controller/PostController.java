@@ -2,6 +2,7 @@ package com.tcs.blog_post_backend.controller;
 
 import com.tcs.blog_post_backend.dto.CreateCommentRequest;
 import com.tcs.blog_post_backend.dto.CreatePostRequest;
+import com.tcs.blog_post_backend.dto.PagedResponse;
 import com.tcs.blog_post_backend.dto.UpdatePostRequest;
 import com.tcs.blog_post_backend.model.Comment;
 import com.tcs.blog_post_backend.model.Post;
@@ -24,8 +25,13 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts(@RequestParam(required = false) String author) {
-        return ResponseEntity.ok(postService.getAllPosts(author));
+    public ResponseEntity<PagedResponse<Post>> getAllPosts(
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return ResponseEntity.ok(postService.getPosts(author, search, page, size));
     }
 
     @GetMapping("/{id}")

@@ -27,3 +27,16 @@ export interface UpdatePostPayload {
   body: string;
   tags: string[];
 }
+
+export interface PagedResponse<T> {
+  content: T[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+

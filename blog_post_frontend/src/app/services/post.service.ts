@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Post, Comment, CreatePostPayload, UpdatePostPayload } from '../models/post.model';
+import { Post, Comment, CreatePostPayload, UpdatePostPayload, PagedResponse } from '../models/post.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +12,19 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts(author?: string): Observable<Post[]> {
-    if (author) {
-      return this.http.get<Post[]>(`${this.apiUrl}?author=${encodeURIComponent(author)}`);
+  getPosts(author?: string, search?: string, page: number = 0, size: number = 5): Observable<PagedResponse<Post>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    if (author && author.trim()) {
+      params = params.set('author', author.trim());
     }
-    return this.http.get<Post[]>(this.apiUrl);
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    return this.http.get<PagedResponse<Post>>(this.apiUrl, { params });
   }
 
   getPostById(id: number): Observable<Post> {
